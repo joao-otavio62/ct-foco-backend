@@ -1,0 +1,6 @@
+@ct_foco_backend_HostAddress = http://localhost:5084
+
+GET {{ct_foco_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
