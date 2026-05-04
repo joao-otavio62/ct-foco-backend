@@ -1,16 +1,16 @@
-using ct_foco_backend.Data;
-using ct_foco_backend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
+using ct_foco_backend.Services;
+using ct_foco_backend.Data;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
 builder.Services.AddDbContext<CtFocoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-// CORS para React dev server
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactDev", policy =>
@@ -21,9 +21,33 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHostedService<VencimentoJob>();
 
 var app = builder.Build();
 
@@ -32,19 +56,18 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<CtFocoDbContext>();
     db.Database.Migrate();
 }
-    
 
-    if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors("AllowReactDev");
 app.UseAuthorization();
-app.MapControllers();
 app.UseStaticFiles();
-app.UseCors("AllowFrontend");
 app.MapControllers();
 app.Run();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ct_foco_backend.Data;
 
@@ -11,9 +12,11 @@ using ct_foco_backend.Data;
 namespace ct_foco_backend.Migrations
 {
     [DbContext(typeof(CtFocoDbContext))]
-    partial class CtFocoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260504203546_ChangeHorarioToString")]
+    partial class ChangeHorarioToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
