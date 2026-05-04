@@ -5,19 +5,22 @@ using ct_foco_backend.Services;
 using ct_foco_backend.Data;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CtFocoDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));  // 👈 trocado
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactDev", policy =>
     {
-        policy.WithOrigins("http://localhost:5084", "http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5084",
+            "http://localhost:5173",
+            "https://SEU-PROJETO.vercel.app"  // 👈 adicione depois que criar no Vercel
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
@@ -42,11 +45,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddHostedService<VencimentoJob>();
 
 var app = builder.Build();
@@ -64,10 +64,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowReactDev");       
 app.UseAuthentication();
-app.UseAuthorization();
-app.UseCors("AllowReactDev");
-app.UseAuthorization();
+app.UseAuthorization();             
 app.UseStaticFiles();
 app.MapControllers();
 app.Run();
