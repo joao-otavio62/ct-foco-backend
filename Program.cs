@@ -8,21 +8,24 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CtFocoDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));  
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactDev", policy =>
     {
-        policy.WithOrigins(
-            "http://localhost:5084",
-            "http://localhost:5173",
-            "https://ct-foco-project.vercel.app"
-        )
+        policy.SetIsOriginAllowed(origin =>
+        {
+            var uri = new Uri(origin);
+            return uri.Host == "ct-foco-project.vercel.app" ||
+                   uri.Host.EndsWith(".vercel.app") ||
+                   uri.Host == "localhost";
+        })
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
 });
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
