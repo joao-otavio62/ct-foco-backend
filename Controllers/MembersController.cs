@@ -71,7 +71,7 @@ public class MembersController : ControllerBase
         member.Nome = dto.Nome;
         member.Email = dto.Email;
         member.Pagamento = dto.Pagamento;
-        member.Vencimento = dto.Vencimento;  
+        member.Vencimento = dto.Vencimento.HasValue ? DateTime.SpecifyKind(dto.Vencimento.Value, DateTimeKind.Utc) : null;
         member.Telefone = dto.Telefone;
         member.DataNascimento = DateTime.SpecifyKind(dto.DataNascimento.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
         member.Altura = dto.Altura;
