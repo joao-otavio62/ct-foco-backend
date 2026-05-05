@@ -73,7 +73,7 @@ public class MembersController : ControllerBase
         member.Pagamento = dto.Pagamento;
         member.Vencimento = dto.Vencimento;  
         member.Telefone = dto.Telefone;
-        member.DataNascimento = DateTime.SpecifyKind(dto.DataNascimento.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+        member.DataNascimento = DateTime.SpecifyKind(dto.DataNascimento.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
         member.Altura = dto.Altura;
         member.Modalidade = dto.Modalidade;
         member.Horario = dto.Horario;
