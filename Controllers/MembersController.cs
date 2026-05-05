@@ -46,12 +46,12 @@ public class MembersController : ControllerBase
             Email = dto.Email,
             Telefone = dto.Telefone,
             Pagamento = dto.Pagamento,
-            Vencimento = dto.Vencimento,  // DateTime? → DateTime? direto
-            DataNascimento = dto.DataNascimento.ToDateTime(TimeOnly.MinValue),
+            Vencimento = dto.Vencimento,
+            DataNascimento = DateTime.SpecifyKind(dto.DataNascimento.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
             Altura = dto.Altura,
             Modalidade = dto.Modalidade,
             Horario = dto.Horario,
-            DataEntrada = DateTime.UtcNow,  // sempre gerado pelo backend
+            DataEntrada = DateTime.UtcNow,  
         };
 
         _db.Members.Add(member);
@@ -71,13 +71,13 @@ public class MembersController : ControllerBase
         member.Nome = dto.Nome;
         member.Email = dto.Email;
         member.Pagamento = dto.Pagamento;
-        member.Vencimento = dto.Vencimento;  // DateTime? → DateTime? direto
+        member.Vencimento = dto.Vencimento;  
         member.Telefone = dto.Telefone;
-        member.DataNascimento = dto.DataNascimento.ToDateTime(TimeOnly.MinValue);
+        member.DataNascimento = DateTime.SpecifyKind(dto.DataNascimento.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
         member.Altura = dto.Altura;
         member.Modalidade = dto.Modalidade;
         member.Horario = dto.Horario;
-        // DataEntrada nunca é alterada no update
+        
 
         await _db.SaveChangesAsync();
 
