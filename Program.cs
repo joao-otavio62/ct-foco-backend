@@ -8,7 +8,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CtFocoDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));  // 👈 trocado
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));  
 
 builder.Services.AddCors(options =>
 {
@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             "http://localhost:5084",
             "http://localhost:5173",
-            "https://ct-foco-project-2gawcc3ef-joao-otavio62s-projects.vercel.app"
+            "https://ct-foco-project.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
