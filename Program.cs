@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             "http://localhost:5084",
             "http://localhost:5173",
-            "https://SEU-PROJETO.vercel.app"  // 👈 adicione depois que criar no Vercel
+            "https://ct-foco-project.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
@@ -56,13 +56,11 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<CtFocoDbContext>();
     db.Database.Migrate();
 }
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseCors("AllowReactDev");       
 app.UseAuthentication();
