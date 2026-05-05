@@ -10,7 +10,7 @@
         
         public string Pagamento { get; set; } = string.Empty;
         
-        public DateTime? Vencimento { get; set; }
+        public DateOnly? Vencimento { get; set; }
         
         public string Telefone { get; set; } = string.Empty;
         
